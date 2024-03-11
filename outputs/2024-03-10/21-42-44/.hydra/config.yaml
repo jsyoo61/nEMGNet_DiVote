@@ -1,0 +1,10 @@
+dir:
+  project: C:\Users\jsyoo\Mirror\BMI Lab\Research\EMG\code_publish
+  data_raw: ${dir.project}/data/raw
+  data_processed: ${dir.project}/data/processed
+  data_cohort: ${dir.data_processed}/cohort.csv
+sr_src: 48000.0
+sr_trg: 10000.0
+window: 0.4
+overlap: 0.3
+toy: true

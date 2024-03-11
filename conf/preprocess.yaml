@@ -1,0 +1,9 @@
+defaults:
+  - /dir
+
+sr_src: 48e3
+sr_trg: 1e4 # 1kHz
+window: 0.4 # seconds
+overlap: 0.3 # seconds
+
+toy: true
