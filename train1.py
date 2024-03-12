@@ -1,8 +1,6 @@
 # %%
-import itertools as it
 import logging
 import os
-import pprint
 import shutil
 from pathlib import Path
 
@@ -12,10 +10,8 @@ from omegaconf import OmegaConf, DictConfig
 import pandas as pd
 
 import dataset as D
-import eval as E
 import hideandseek as hs
 import tools as T
-import utils as U
 
 # %%
 log = logging.getLogger(__name__)
@@ -26,12 +22,12 @@ if False:
     hydra.core.global_hydra.GlobalHydra.instance().clear()
     hydra.initialize_config_dir(config_dir=os.path.join(os.getcwd(),'conf'), job_name='train')
     overrides = []
-    cfg = hydra.compose(config_name='train', overrides=overrides)
+    cfg = hydra.compose(config_name='train1', overrides=overrides)
     print(OmegaConf.to_yaml(cfg))
     log.info=print
 
 # %%
-@hydra.main(config_path='../conf', config_name='train', version_base='1.2')
+@hydra.main(config_path='conf', config_name='train1', version_base='1.2')
 def main(cfg: DictConfig) -> None:
     # %%
     # Print current experiment info
@@ -42,9 +38,8 @@ def main(cfg: DictConfig) -> None:
     T.torch.seed(cfg.random.seed, strict=cfg.random.strict)
     log.info(f'device: {device}')
 
-    # Assumes the process runs in a new directory (hydra.cwd==True)
+    # Assumes the process runs in a new directory (hydra.job.cwd==True)
     path_dict = {
-        'result': Path('result'),
         'network': Path('network'),
     }
     log.info(f'CWD: {os.getcwd()}')
@@ -83,28 +78,28 @@ def main(cfg: DictConfig) -> None:
     # %%
     trainer.train()  
     trainer.load_best_model()
-    trainer.save()
 
     # %%
     # Testing
-    node.model.to(device)
+    trainer.network.to(device)
+    result = hs.E.test_model(trainer.model, ds_test, batch_size=cfg.train.validation.batch_size)
+    scores = hs.E.evaluate(results=result, metrics=hs.E.classification_report_full)
 
-    # %%
-    y_encoder = dataset_test.y_encoder.classes_.tolist()
-    result = hs.E.test_node(node, dataset_test, batch_size=cfg.test_batch_size, keep_x=True)
-    x, y_true, y_score = result['x'], result['y_true'], result['y_score']
-    scorer = E.Scorer(RESULT_DIR=path.result)
-    scores = scorer(x=x, y=y_true, y_score=y_score, y_encoder=y_encoder, test_cohort=test_cohort, exp_cfg=cfg, plot=cfg.plot)
-    scores = T.unnest_dict(scores)
+    scores = hs.E.classification_report_full(result, ovr=True)
+    log.info(f'Evaluation scores: {pd.DataFrame(scores).T}')
 
-    # %%
-    pp=pprint.PrettyPrinter(indent=2)
-    content = pp.pformat(scores)
-    log.info(content)
-    T.write(content, path.result.join('scores.txt'))
     T.save_pickle(scores, 'scores.p')
 
-    # # %%
+    # %%
+    if cfg.save_model:
+        trainer.save('network')
+    else:
+        shutil.rmtree('network')
+    if os.path.exists('network_temp'): shutil.rmtree('network_temp')
+
+    if cfg.save_result:
+        T.save_pickle(result, 'result.p')
+
 # %%
 if __name__ == '__main__':
     main()

@@ -24,9 +24,29 @@ Training is done in 2 steps:
 python train1.py
 ```
 
-2. Classifier training
+To specify specific run directory:
 ```
-python train2.py
+python train1.py hydra.run.dir=your_wanted_dir
+```
+For a sweep run
+```
+python train1.py -m "random.seed=range(0,5)" train.update.lr=1e-3,1e-4 train.update.batch_size=64,128 hydra.sweep.dir=your_sweep_dir
+```
+
+2. Classifier training
+
+Use patient feature without muscle type info
+```
+python train2.py feature_type=all dir.train1=your_wanted_dir
+```
+Use patient feature with muscle type info
+```
+python train2.py feature_type=PD dir.train1=your_wanted_dir
+```
+
+Sweep over train1 sweep directories
+```
+python train2.py feature_type=all "dir.train1=your_wanted_dir/${subdir}" "subdir=range(0,20)"
 ```
 
 # Analysis

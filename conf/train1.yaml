@@ -22,13 +22,14 @@ train:
 
 amp: False
 save_model: true
+save_result: true
 
 # ML
 random:
   seed: 0
   strict: False # Random convolution operator for minimal deviation with speed
 
-gpu_id: null # Ignored in multirun, thus when job_num exists
+gpu_id: null # Ignored in multirun, when multiprocess job_num exists
 
 # Run directories
 hydra:
@@ -36,3 +37,5 @@ hydra:
     dir: outputs/train1/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
     dir: multirun/train1/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: true

@@ -162,3 +162,6 @@ cython_debug/
 *.p
 *.csv
 data/
+outputs/
+multirun/
+exp/

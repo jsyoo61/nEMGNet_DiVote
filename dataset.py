@@ -48,6 +48,7 @@ def get_dataset(cfg):
     train_i, val_i, test_i = get_signal_i(train_patient), get_signal_i(val_patient), get_signal_i(test_patient)
     log.info(f'train/val/test: {len(train_i)/len(cohort)}/{len(val_i)/len(cohort)}/{len(test_i)/len(cohort)}')    
     train_cohort, val_cohort, test_cohort = cohort.iloc[train_i], cohort.iloc[val_i], cohort.iloc[test_i]
+    T.save_pickle(train_i, 'train_i.p'), T.save_pickle(val_i, 'val_i.p'), T.save_pickle(test_i, 'test_i.p')
 
     # Make torch dataset
     ds_train, ds_val, ds_test = nEMGDataset(train_cohort), nEMGDataset(val_cohort), nEMGDataset(test_cohort)

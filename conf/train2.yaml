@@ -1,0 +1,28 @@
+defaults:
+  - /dir
+  - feature_type: all
+
+# train1
+dir:
+  train1: ''
+  _train1: ${dir.project}/${dir.train1}
+  train1_cfg: ${dir._train1}/.hydra/config.yaml
+
+test_batch_size: 128
+
+# ML
+random:
+  seed: 0
+  strict: False # only use when debugging
+
+gpu_id: null # Ignored in multirun, when multiprocess job_num exists
+
+save_result: true
+
+hydra:
+  run:
+    dir: outputs/train2/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/train2/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: true
