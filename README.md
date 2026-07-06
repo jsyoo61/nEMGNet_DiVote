@@ -1,6 +1,18 @@
 # nEMGNet_DiVote
 Code for ([Yoo, Jaesung, et al.](https://doi.org/10.1016/j.cmpb.2022.107079) "Residual one-dimensional convolutional neural network for neuromuscular disorder classification from needle electromyography signals with explainability." Computer Methods and Programs in Biomedicine 226 (2022): 107079.)
 
+Please cite:
+
+    @article{yoo2022residual,
+    title={Residual one-dimensional convolutional neural network for neuromuscular disorder classification from needle electromyography signals with explainability},
+    author={Yoo, Jaesung and Yoo, Ilhan and Youn, Ina and Kim, Sung-Min and Yu, Ri and Kim, Kwangsoo and Kim, Keewon and Lee, Seung-Bo},
+    journal={Computer Methods and Programs in Biomedicine},
+    volume={226},
+    pages={107079},
+    year={2022},
+    publisher={Elsevier}
+    }
+
 Powered by [hydra](https://hydra.cc/docs/intro/), [hideandseek](https://github.com/jsyoo61/hideandseek), and [tools-jsyoo61](https://github.com/jsyoo61/tools)
 
 # Preprocess
